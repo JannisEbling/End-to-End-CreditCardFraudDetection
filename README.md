@@ -172,7 +172,6 @@ creditcardfraud/
 │   ├── logging/        # Logging setup
 │   ├── pipeline/       # Training pipeline
 │   └── utils/          # Utility functions
-├── templates/          # HTML templates
 ├── app.py             # Streamlit interface
 ├── main.py            # Training entry point
 ├── Dockerfile         # Container definition
