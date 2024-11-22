@@ -22,6 +22,7 @@ The model provides binary classification to determine if a transaction is legiti
 - **Interactive UI**: Streamlit-based interface
 - **CI/CD**: Continuous integration and deployment
 - **Modular Architecture**: Easy to understand and maintain
+- **Model Tracking**: Track Model Performance with MLFlow
 
 ## 🛠️ Tech Stack
 
