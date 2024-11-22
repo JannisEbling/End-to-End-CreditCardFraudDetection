@@ -1,0 +1,75 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual Environment
+.env
+.venv
+env/
+venv/
+ENV/
+
+# IDE
+.idea/
+.vscode/
+*.swp
+*.swo
+.project
+.pydevproject
+.settings/
+
+# Jupyter Notebook
+.ipynb_checkpoints
+*.ipynb
+
+# Project specific
+artifacts/
+logs/
+mlruns/
+prediction_output/
+*.pkl
+*.csv
+*.log
+
+# Data files
+data/
+!data/generate_test_data.py
+!data/README.md
+!data/sample/
+creditcard_2023.csv
+creditcard.csv
+
+# OS specific
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Documentation
+docs/_build/
+docs/api/
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+.tox/
+coverage.xml
+*.cover

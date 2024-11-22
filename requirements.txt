@@ -1,0 +1,18 @@
+python-dotenv
+pandas
+numpy
+pymongo
+certifi
+pymongo[srv]
+scikit-learn
+mlflow
+pyaml
+dagshub
+fastapi
+streamlit
+python-multipart
+azure-ai-ml>=1.9.0
+azure-identity>=1.13.0
+azure-core>=1.29.4
+
+-e .
