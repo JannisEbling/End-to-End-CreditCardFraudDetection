@@ -1,7 +1,7 @@
 import pytest
 import pandas as pd
 import numpy as np
-from src.utils.ml_utils.model.estimator import NetworkModel
+from src.utils.ml_utils.model.estimator import CreditCardModel
 from src.components.model_trainer import ModelTrainer
 
 
@@ -21,7 +21,7 @@ def sample_data():
 
 def test_network_model_initialization():
     """Test NetworkModel initialization"""
-    model = NetworkModel()
+    model = CreditCardModel()
     assert model is not None
     assert hasattr(model, "model")
 
@@ -31,7 +31,7 @@ def test_model_training(sample_data):
     X = sample_data.drop("target", axis=1)
     y = sample_data["target"]
 
-    model = NetworkModel()
+    model = CreditCardModel()
     model.train(X, y)
 
     assert hasattr(model, "model")
@@ -43,7 +43,7 @@ def test_model_prediction(sample_data):
     X = sample_data.drop("target", axis=1)
     y = sample_data["target"]
 
-    model = NetworkModel()
+    model = CreditCardModel()
     model.train(X, y)
     predictions = model.predict(X)
 
@@ -67,7 +67,7 @@ def test_model_trainer_initialization():
 )
 def test_model_invalid_input(invalid_data):
     """Test model behavior with invalid input"""
-    model = NetworkModel()
+    model = CreditCardModel()
     with pytest.raises(Exception):
         if invalid_data is None:
             model.train(None, None)
