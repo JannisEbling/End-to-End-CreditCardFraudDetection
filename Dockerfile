@@ -1,15 +1,17 @@
 # Build stage
-FROM python:3.10-slim-buster as builder
+FROM python:3.10-slim-buster AS builder
 
 # Set working directory
 WORKDIR /app
 
-# Copy only requirements first to leverage Docker cache
-COPY requirements.txt .
+# Copy application code
+COPY . .
 
 # Install build dependencies and create virtual environment
 RUN python -m venv /opt/venv && \
-    /opt/venv/bin/pip install --no-cache-dir -r requirements.txt
+    /opt/venv/bin/pip install --upgrade pip && \
+    /opt/venv/bin/pip install --no-cache-dir -r requirements.txt && \
+    /opt/venv/bin/pip install -e .
 
 # Final stage
 FROM python:3.10-slim-buster
@@ -29,18 +31,11 @@ COPY . .
 # Change ownership to non-root user
 RUN chown -R appuser:appuser /app
 
+# Set environment variable for Python path
+ENV PATH="/opt/venv/bin:$PATH"
+
 # Switch to non-root user
 USER appuser
 
-# Make sure we use the virtualenv
-ENV PATH="/opt/venv/bin:$PATH"
-
-# Expose Streamlit port
-EXPOSE 8501
-
-# Set environment variables
-ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
-
-# Run the application
-CMD ["streamlit", "run", "app.py"]
+# Command to run the application
+CMD ["python", "app.py"]
