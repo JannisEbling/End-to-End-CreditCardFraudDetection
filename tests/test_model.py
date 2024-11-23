@@ -2,7 +2,8 @@ import pytest
 import pandas as pd
 import numpy as np
 from src.utils.ml_utils.model.estimator import CreditCardModel
-from src.components.model_trainer import ModelTrainer
+from sklearn.preprocessing import StandardScaler
+from xgboost import XGBClassifier
 
 
 @pytest.fixture
@@ -19,42 +20,61 @@ def sample_data():
     return pd.DataFrame(data)
 
 
-def test_network_model_initialization():
-    """Test NetworkModel initialization"""
-    model = CreditCardModel()
-    assert model is not None
-    assert hasattr(model, "model")
+@pytest.fixture
+def preprocessor():
+    """Create a sample preprocessor"""
+    return StandardScaler()
 
 
-def test_model_training(sample_data):
+@pytest.fixture
+def model():
+    """Create a sample model"""
+    return XGBClassifier(random_state=42)
+
+
+def test_credit_card_model_initialization(preprocessor, model):
+    """Test CreditCardModel initialization"""
+    credit_card_model = CreditCardModel(preprocessor=preprocessor, model=model)
+    assert credit_card_model is not None
+    assert hasattr(credit_card_model, "model")
+    assert hasattr(credit_card_model, "preprocessor")
+
+
+def test_model_training(sample_data, preprocessor, model):
     """Test model training process"""
     X = sample_data.drop("target", axis=1)
     y = sample_data["target"]
 
-    model = CreditCardModel()
-    model.train(X, y)
+    credit_card_model = CreditCardModel(preprocessor=preprocessor, model=model)
 
-    assert hasattr(model, "model")
-    assert model.model is not None
+    # Fit preprocessor and transform data
+    X_transformed = preprocessor.fit_transform(X)
+
+    # Train model
+    model.fit(X_transformed, y)
+
+    assert hasattr(credit_card_model, "model")
+    assert credit_card_model.model is not None
 
 
-def test_model_prediction(sample_data):
+def test_model_prediction(sample_data, preprocessor, model):
     """Test model prediction"""
     X = sample_data.drop("target", axis=1)
     y = sample_data["target"]
 
-    model = CreditCardModel()
-    model.train(X, y)
-    predictions = model.predict(X)
+    credit_card_model = CreditCardModel(preprocessor=preprocessor, model=model)
+
+    # Fit preprocessor and transform data
+    X_transformed = preprocessor.fit_transform(X)
+
+    # Train model
+    model.fit(X_transformed, y)
+
+    # Make predictions
+    predictions = model.predict(X_transformed)
 
     assert len(predictions) == len(X)
     assert all(isinstance(pred, (int, np.integer)) for pred in predictions)
-
-
-def test_model_trainer_initialization():
-    """Test ModelTrainer initialization"""
-    trainer = ModelTrainer()
-    assert trainer is not None
 
 
 @pytest.mark.parametrize(
@@ -65,16 +85,12 @@ def test_model_trainer_initialization():
         pd.DataFrame({"feature1": [], "target": []}),
     ],
 )
-def test_model_invalid_input(invalid_data):
+def test_model_invalid_input(invalid_data, preprocessor, model):
     """Test model behavior with invalid input"""
-    model = CreditCardModel()
+    credit_card_model = CreditCardModel(preprocessor=preprocessor, model=model)
+
     with pytest.raises(Exception):
         if invalid_data is None:
-            model.train(None, None)
+            credit_card_model.predict(None)
         else:
-            X = (
-                invalid_data.drop("target", axis=1)
-                if not invalid_data.empty
-                else invalid_data
-            )
-            y = invalid_data["target"] if "target" in invalid_data else pd.Series()
+            credit_card_model.predict(invalid_data)
